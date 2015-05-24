@@ -2,6 +2,8 @@ package com.example.dawid.myapplication;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -32,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
     TabHost.TabSpec tabSpec;
 
     ArrayList<Contact> Contacts = new ArrayList<Contact>();
-    ListView ContactListView;
+    RecyclerView contactView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,7 @@ public class MainActivity extends ActionBarActivity {
         editTextMail = (EditText) findViewById(R.id.editTextMail);
         editTextPhone = (EditText) findViewById(R.id.editTextPhone);
         btnAddContact = (Button) findViewById(R.id.buttonAddContact);
-        ContactListView = (ListView) findViewById(R.id.contactList);
-
+        contactView = (RecyclerView) findViewById(R.id.contactList);
 
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
@@ -66,6 +67,11 @@ public class MainActivity extends ActionBarActivity {
         tabSpec.setIndicator("Contact List");
         tabHost.addTab(tabSpec);
 
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        contactView.setLayoutManager(llm);
+
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+
         btnAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,15 +80,15 @@ public class MainActivity extends ActionBarActivity {
                 {
                     Toast.makeText(getApplicationContext(), "Fill the 'Name' field first !", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
+                else {
                     addContact(editTextName.getText().toString(),
                             editTextPhone.getText().toString(),
                             editTextMail.getText().toString());
 
                     Toast.makeText(getApplicationContext(), editTextName.getText().toString() + " has been added to your Contact List !", Toast.LENGTH_SHORT).show();
-                    ArrayAdapter<Contact> adapter = new ContactsAdapter();
-                    ContactListView.setAdapter(adapter);
+
+                    ContactAdapter contactAdapter = new ContactAdapter(Contacts);
+                    contactView.setAdapter(contactAdapter);
 
                     editTextName.setText("");
                     editTextMail.setText("");
@@ -91,8 +97,6 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-
-
 
     }
 
@@ -117,36 +121,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private class ContactsAdapter extends ArrayAdapter<Contact>
-    {
-        ContactsAdapter()
-        {
-            super(getApplicationContext(), R.layout.contact_element, Contacts);
-        }
-
-        @Override
-        public View getView(int position, View v, ViewGroup vg)
-        {
-            if (v == null)
-            {
-                v = getLayoutInflater().inflate(R.layout.contact_element, vg,false);
-            }
-
-            Contact currentc = Contacts.get(position);
-
-            TextView name = (TextView) v.findViewById(R.id.name);
-            name.setText(currentc.getName());
-            TextView phone = (TextView) v.findViewById(R.id.phonenumber);
-            phone.setText(currentc.getPhonenumber());
-            TextView email = (TextView) v.findViewById(R.id.email);
-            email.setText(currentc.getEmail());
-
-            return v;
-        }
-
-
     }
 
     public void addContact(String name, String phone, String email)

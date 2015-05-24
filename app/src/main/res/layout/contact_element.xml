@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android.support.v7.cardview:cardBackgroundColor="#42A5F5"
-    android.support.v7.cardview:cardCornerRadius="30dp">
+    android.support.v7.cardview:cardCornerRadius="30dp"
+    android:layout_margin="4dp">
 
     <TextView
         android:id="@+id/name"
