@@ -34,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
     Button btnAddContact;
     TabHost tabHost;
     TabHost.TabSpec tabSpec;
-    DatabaseHandler dbHandler;
+    public DatabaseHandler dbHandler;
 
     List<Contact> Contacts = new ArrayList<Contact>();
     RecyclerView contactView;
@@ -81,12 +81,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                if (editTextName.getText().toString().trim().isEmpty())
-                {
+                if (editTextName.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Fill the 'Name' field first !", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     Contact c = new Contact(dbHandler.getContactsCount(), editTextName.getText().toString(), editTextPhone.getText().toString(), editTextMail.getText().toString());
                     dbHandler.createContact(c);
                     Contacts.add(c);
@@ -100,6 +97,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
+
 
 
         List<Contact> existingContacts = dbHandler.getAllContacts();

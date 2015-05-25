@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -45,14 +46,36 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     public class ContactHolder extends RecyclerView.ViewHolder
     {
         protected TextView holderName, holderEmail, holderPhone;
+        DatabaseHandler dbHandler;
 
-        public ContactHolder(View listItemView)
+        public ContactHolder(final View listItemView)
         {
             super(listItemView);
 
             holderEmail = (TextView) listItemView.findViewById(R.id.email);
             holderName = (TextView) listItemView.findViewById(R.id.name);
             holderPhone = (TextView) listItemView.findViewById(R.id.phonenumber);
+            dbHandler = new DatabaseHandler(listItemView.getContext());
+
+            listItemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    Toast.makeText(listItemView.getContext(), holderName.getText().toString() + " deleted !",Toast.LENGTH_LONG).show();
+                    deleteView(getPosition());
+                    return false;
+                }
+            });
         }
+
+        public void deleteView(int position)
+        {
+            contactList.remove(position);
+            notifyItemRemoved(position);
+            dbHandler.deleteContact(position);
+        }
+
     }
 }
