@@ -6,9 +6,11 @@ package com.example.dawid.myapplication;
 public class Contact {
 
     private String _name, _email, _phonenumber;
+    private int _id;
 
-    public Contact(String name, String phonenumber, String email)
+    public Contact(int id, String name, String phonenumber, String email)
     {
+        _id = id;
         _name = name;
         _phonenumber = phonenumber;
         _email = email;
@@ -29,5 +31,8 @@ public class Contact {
         return _email;
     }
 
-
+    public int getId()
+    {
+        return _id;
+    }
 }

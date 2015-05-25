@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -32,8 +34,9 @@ public class MainActivity extends ActionBarActivity {
     Button btnAddContact;
     TabHost tabHost;
     TabHost.TabSpec tabSpec;
+    DatabaseHandler dbHandler;
 
-    ArrayList<Contact> Contacts = new ArrayList<Contact>();
+    List<Contact> Contacts = new ArrayList<Contact>();
     RecyclerView contactView;
 
     @Override
@@ -67,6 +70,8 @@ public class MainActivity extends ActionBarActivity {
         tabSpec.setIndicator("Contact List");
         tabHost.addTab(tabSpec);
 
+        dbHandler = new DatabaseHandler(getApplicationContext());
+
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         contactView.setLayoutManager(llm);
 
@@ -80,24 +85,41 @@ public class MainActivity extends ActionBarActivity {
                 {
                     Toast.makeText(getApplicationContext(), "Fill the 'Name' field first !", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    addContact(editTextName.getText().toString(),
-                            editTextPhone.getText().toString(),
-                            editTextMail.getText().toString());
+                else
+                {
+                    Contact c = new Contact(dbHandler.getContactsCount(), editTextName.getText().toString(), editTextPhone.getText().toString(), editTextMail.getText().toString());
+                    dbHandler.createContact(c);
+                    Contacts.add(c);
 
                     Toast.makeText(getApplicationContext(), editTextName.getText().toString() + " has been added to your Contact List !", Toast.LENGTH_SHORT).show();
-
-                    ContactAdapter contactAdapter = new ContactAdapter(Contacts);
-                    contactView.setAdapter(contactAdapter);
+                    populateList();
 
                     editTextName.setText("");
                     editTextMail.setText("");
                     editTextPhone.setText("");
-
                 }
             }
         });
 
+
+        List<Contact> existingContacts = dbHandler.getAllContacts();
+
+        for (int i = 0; i < dbHandler.getContactsCount(); i++)
+        {
+            Contacts.add(existingContacts.get(i));
+        }
+
+        if (!existingContacts.isEmpty())
+        {
+            populateList();
+        }
+
+    }
+
+    public void populateList()
+    {
+        ContactAdapter contactAdapter = new ContactAdapter(Contacts);
+        contactView.setAdapter(contactAdapter);
     }
 
 
@@ -121,11 +143,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void addContact(String name, String phone, String email)
-    {
-        Contacts.add(new Contact(name, phone, email));
     }
 
 }
