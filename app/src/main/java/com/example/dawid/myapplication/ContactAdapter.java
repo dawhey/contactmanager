@@ -63,7 +63,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                 @Override
                 public boolean onLongClick(View v)
                 {
-                    Toast.makeText(listItemView.getContext(), holderName.getText().toString() + " deleted !",Toast.LENGTH_LONG).show();
+                    Toast.makeText(listItemView.getContext(), holderName.getText().toString() + " deleted",Toast.LENGTH_SHORT).show();
                     deleteView(getPosition());
                     return false;
                 }

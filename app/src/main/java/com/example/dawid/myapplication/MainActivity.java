@@ -82,36 +82,44 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 if (editTextName.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Fill the 'Name' field first !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Fill the 'Name' field first!", Toast.LENGTH_SHORT).show();
                 } else {
                     Contact c = new Contact(dbHandler.getContactsCount(), editTextName.getText().toString(), editTextPhone.getText().toString(), editTextMail.getText().toString());
-                    dbHandler.createContact(c);
-                    Contacts.add(c);
 
-                    Toast.makeText(getApplicationContext(), editTextName.getText().toString() + " has been added to your Contact List !", Toast.LENGTH_SHORT).show();
-                    populateList();
-
-                    editTextName.setText("");
-                    editTextMail.setText("");
-                    editTextPhone.setText("");
+                    if (!contactExists(c))
+                    {
+                        dbHandler.createContact(c);
+                        Contacts.add(c);
+                        Toast.makeText(getApplicationContext(), editTextName.getText().toString() + " has been added to your Contact List", Toast.LENGTH_SHORT).show();
+                        editTextName.setText("");
+                        editTextMail.setText("");
+                        editTextPhone.setText("");
+                        return;
+                    }
+                    else
+                        Toast.makeText(getApplicationContext(),"Contact already exists!",Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        if (dbHandler.getContactsCount() != 0)
+            Contacts.addAll(dbHandler.getAllContacts());
 
+        populateList();
 
-        List<Contact> existingContacts = dbHandler.getAllContacts();
+    }
 
-        for (int i = 0; i < dbHandler.getContactsCount(); i++)
+    public boolean contactExists(Contact c)
+    {
+        String name = c.getName();
+        int contactCount = Contacts.size();
+
+        for (int i = 0; i < contactCount; i++)
         {
-            Contacts.add(existingContacts.get(i));
+            if (name.compareToIgnoreCase(Contacts.get(i).getName()) == 0)
+                return true;
         }
-
-        if (!existingContacts.isEmpty())
-        {
-            populateList();
-        }
-
+        return false;
     }
 
     public void populateList()

@@ -64,7 +64,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_NAME, new String[] {KEY_ID, KEY_NAME, KEY_PHONE, KEY_EMAIL}, KEY_ID + "=?", new String[] {String.valueOf(id)},null,null,null);
+        Cursor cursor = db.query(TABLE_NAME, new String[]{KEY_ID, KEY_NAME, KEY_PHONE, KEY_EMAIL}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
 
         if (cursor!=null)
             cursor.moveToFirst();
@@ -105,10 +105,20 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         List<Contact> list = new ArrayList<>();
 
-        for (int i = 0; i < getContactsCount(); i++)
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if (cursor.moveToFirst());
         {
-            list.add(getContact(i));
+            do
+            {
+                list.add(new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
+            }
+            while(cursor.moveToNext());
         }
+
+        cursor.close();
+        db.close();
 
         return list;
     }
