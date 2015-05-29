@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="zielony">#26A69A</color>
-    <color name="niebieski">#1E88E5</color>
+    <color name="DarkBlue">#42A5F5</color>
     <color name="LightBlue">#64B5F6</color>
     <color name="LightBlue1">#2196F3</color>
     <color name="DarkGreen">#004D40</color>
     <color name="StatusBarColor">#1976D2</color>
+
 </resources>

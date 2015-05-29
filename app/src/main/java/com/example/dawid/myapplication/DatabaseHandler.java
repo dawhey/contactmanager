@@ -127,7 +127,23 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         SQLiteDatabase db = getWritableDatabase();
 
-        db.delete(TABLE_NAME, KEY_ID + "=?", new String[] {String.valueOf(id)});
+        db.delete(TABLE_NAME, KEY_ID + "=?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    public void deleteFirst()
+    {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+
+        if(cursor.moveToFirst()) {
+            long rowId = cursor.getLong(cursor.getColumnIndex(KEY_ID));
+
+            db.delete(TABLE_NAME, KEY_ID +  "=" + rowId, null);
+        }
+
+        cursor.close();
         db.close();
     }
 

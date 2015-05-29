@@ -1,7 +1,10 @@
 package com.example.dawid.myapplication;
 
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -14,7 +17,9 @@ import java.util.List;
  */
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder>
 {
-    private List<Contact> contactList;
+    private static List<Contact> contactList;
+    DatabaseHandler dbHandler;
+    CardView cardselected;
 
     public ContactAdapter(List<Contact> c)
     {
@@ -46,7 +51,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     public class ContactHolder extends RecyclerView.ViewHolder
     {
         protected TextView holderName, holderEmail, holderPhone;
-        DatabaseHandler dbHandler;
 
         public ContactHolder(final View listItemView)
         {
@@ -59,23 +63,30 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
             listItemView.setOnLongClickListener(new View.OnLongClickListener() {
 
-
                 @Override
-                public boolean onLongClick(View v)
-                {
-                    Toast.makeText(listItemView.getContext(), holderName.getText().toString() + " deleted",Toast.LENGTH_SHORT).show();
-                    deleteView(getPosition());
+                public boolean onLongClick(View v) {
+
+                    MainActivity.delete.setVisible(true);
+                    MainActivity.call.setVisible(true);
+                    MainActivity.itemselected = getPosition();
+                    cardselected = (CardView)v;
+                    cardselected.setCardBackgroundColor(Color.parseColor("#90CAF9"));
+
                     return false;
                 }
             });
         }
 
-        public void deleteView(int position)
-        {
-            contactList.remove(position);
-            notifyItemRemoved(position);
-            dbHandler.deleteContact(position);
-        }
+    }
+    public void deleteView(int position)
+    {
 
+        contactList.remove(position);
+        if (position == 0)
+            dbHandler.deleteFirst();
+        else
+            dbHandler.deleteContact(position);
+
+        notifyItemRemoved(position);
     }
 }
