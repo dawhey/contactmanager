@@ -4,5 +4,9 @@
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">#2196F3</item>
         <item name="colorPrimaryDark">#1976D2</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+    </style>
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">#1976D2</item>
     </style>
 </resources>

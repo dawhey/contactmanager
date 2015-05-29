@@ -115,18 +115,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void populateList() {
-        contactAdapter = new ContactAdapter(Contacts);
+        contactAdapter = new ContactAdapter(this, Contacts);
         contactView.setAdapter(contactAdapter);
     }
 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
-        delete = menu.findItem(R.id.remove);
-        call = menu.findItem(R.id.call);
-        delete.setVisible(true);
-        call.setVisible(true);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -149,33 +144,8 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        else if (id == R.id.remove)
-        {
-            if (areAnySelected() == false)
-            {
-                Toast.makeText(getApplicationContext(), "Select some contacts first.", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                for (int i = 0; i < SelectedItems.size(); i++) {
-                    contactAdapter.deleteView(SelectedItems.get(i));
-                }
-                Toast.makeText(getApplicationContext(), "Contact/s deleted!", Toast.LENGTH_SHORT).show();
-                SelectedItems.clear();
-
-            }
-        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean areAnySelected()
-    {
-        for (int i = 0; i < MainActivity.Contacts.size(); i++)
-        {
-            if (MainActivity.Contacts.get(i).isSelected())
-                return true;
-        }
-        return false;
     }
 
 }

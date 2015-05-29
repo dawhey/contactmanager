@@ -1,13 +1,18 @@
 package com.example.dawid.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +27,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     public static List<Contact> contactList;
     DatabaseHandler dbHandler;
     CardView cardclicked;
+    private Context mContext;
 
-    public ContactAdapter(List<Contact> c)
+    public ContactAdapter(Context context, List<Contact> c)
     {
+        mContext = context;
         contactList = c;
     }
 
@@ -65,25 +72,26 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             holderPhone = (TextView) listItemView.findViewById(R.id.phonenumber);
             dbHandler = new DatabaseHandler(listItemView.getContext());
 
-            listItemView.setOnClickListener(new View.OnClickListener() {
-
+            listItemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
 
-                    cardclicked = (CardView) v;
-                    Contact c = MainActivity.Contacts.get(getPosition());
+                    PopupMenu popup = new PopupMenu(v.getContext(), v);
+                    popup.inflate(R.menu.popup_menu);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                    if (c.isSelected()) {
-                        c.setSelected(false);
-                        cardclicked.setCardBackgroundColor(Color.parseColor("#2196F3"));
-                        MainActivity.SelectedItems.remove(c.getId());
-                    } else {
-                        c.setSelected(true);
-                        cardclicked.setCardBackgroundColor(Color.parseColor("#42A5F5"));
-                        MainActivity.SelectedItems.add(c.getId());
-                    }
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.delete)
+                                deleteView(getPosition());
+                            else if (item.getItemId() == R.id.call)
+                                call(getPosition());
 
-                    unselectAll();
+                            return false;
+                        }
+                    });
+                    popup.show();
+                    return false;
                 }
             });
         }
@@ -99,11 +107,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         notifyItemRemoved(position);
     }
 
-    public void unselectAll()
-    {
-        for (int i = 0; i < MainActivity.Contacts.size(); i++)
-        {
-            MainActivity.Contacts.get(i).setSelected(false);
-        }
+    public void call(int i) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + MainActivity.Contacts.get(i).getPhonenumber()));
+        mContext.startActivity(callIntent);
     }
 }
