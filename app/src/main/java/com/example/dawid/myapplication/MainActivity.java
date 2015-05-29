@@ -14,14 +14,15 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    public static int itemselected;
     public static MenuItem delete, call;
+    public static ArrayList<Integer> SelectedItems = new ArrayList<>();
 
     EditText editTextName;
     EditText editTextMail;
@@ -32,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
     public DatabaseHandler dbHandler;
     ContactAdapter contactAdapter;
 
-    List<Contact> Contacts = new ArrayList<Contact>();
+    public static List<Contact> Contacts = new ArrayList<Contact>();
     RecyclerView contactView;
 
     @Override
@@ -124,8 +125,8 @@ public class MainActivity extends ActionBarActivity {
 
         delete = menu.findItem(R.id.remove);
         call = menu.findItem(R.id.call);
-        delete.setVisible(false);
-        call.setVisible(false);
+        delete.setVisible(true);
+        call.setVisible(true);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -150,13 +151,31 @@ public class MainActivity extends ActionBarActivity {
         }
         else if (id == R.id.remove)
         {
-            contactAdapter.deleteView(itemselected);
-            Toast.makeText(getApplicationContext(), "Contact deleted!", Toast.LENGTH_SHORT).show();
-            delete.setVisible(false);
-            call.setVisible(false);
+            if (areAnySelected() == false)
+            {
+                Toast.makeText(getApplicationContext(), "Select some contacts first.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                for (int i = 0; i < SelectedItems.size(); i++) {
+                    contactAdapter.deleteView(SelectedItems.get(i));
+                }
+                Toast.makeText(getApplicationContext(), "Contact/s deleted!", Toast.LENGTH_SHORT).show();
+                SelectedItems.clear();
+
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean areAnySelected()
+    {
+        for (int i = 0; i < MainActivity.Contacts.size(); i++)
+        {
+            if (MainActivity.Contacts.get(i).isSelected())
+                return true;
+        }
+        return false;
     }
 
 }
