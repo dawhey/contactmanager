@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
     TabHost tabHost;
     TabHost.TabSpec tabSpec;
     public DatabaseHandler dbHandler;
-    ContactAdapter contactAdapter;
+    public static ContactAdapter contactAdapter;
 
     public static List<Contact> Contacts = new ArrayList<Contact>();
     RecyclerView contactView;
@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
             Contacts.addAll(dbHandler.getAllContacts());
 
         populateList();
-
+        contactAdapter.notifyDataSetChanged();
     }
 
     public boolean contactExists(Contact c) {
@@ -119,6 +119,13 @@ public class MainActivity extends ActionBarActivity {
         contactView.setAdapter(contactAdapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        contactAdapter.notifyDataSetChanged();
+        populateList();
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

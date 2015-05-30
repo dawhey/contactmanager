@@ -84,9 +84,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.delete)
                                 deleteView(getPosition());
-                            else if (item.getItemId() == R.id.call)
-                                call(getPosition());
+                            else if (item.getItemId() == R.id.call) {
 
+                                if (!MainActivity.Contacts.get(getPosition()).getPhonenumber().equals(""))
+                                    call(getPosition());
+                                else
+                                    Toast.makeText(listItemView.getContext(), "Contact has no phone number.", Toast.LENGTH_SHORT).show();
+                            } else if (item.getItemId() == R.id.edit) {
+                                    launchEditActivity(getPosition());
+                            }
                             return false;
                         }
                     });
@@ -111,5 +117,18 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + MainActivity.Contacts.get(i).getPhonenumber()));
         mContext.startActivity(callIntent);
+    }
+
+    public void launchEditActivity(int i)
+    {
+        Intent intent = new Intent(mContext, UpdateActivity.class);
+
+        intent.putExtra("name", MainActivity.Contacts.get(i).getName());
+        intent.putExtra("phone", MainActivity.Contacts.get(i).getPhonenumber());
+        intent.putExtra("email", MainActivity.Contacts.get(i).getEmail());
+        intent.putExtra("id", MainActivity.Contacts.get(i).getId());
+        intent.putExtra("pos", i);
+
+        mContext.startActivity(intent);
     }
 }

@@ -5,7 +5,9 @@ package com.example.dawid.myapplication;
  */
 public class Contact {
 
-    private String _name, _email, _phonenumber;
+    private String _name;
+    private String _email = "";
+    private String _phonenumber = "";
     private int _id;
     private boolean _selected = false;
 

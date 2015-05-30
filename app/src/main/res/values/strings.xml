@@ -7,4 +7,5 @@
     <string name="phoneno">Phone No.</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
+    <string name="title_activity_update">UpdateActivity</string>
 </resources>
