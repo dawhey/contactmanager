@@ -52,8 +52,8 @@ public class UpdateActivity extends ActionBarActivity {
                 dbHandler.updateContact(c, editId);
                 Toast.makeText(getApplicationContext(), "Contact updated.", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(UpdateActivity.this, MainActivity.class);
-                MainActivity.Contacts.set(b.getInt("pos"), c);
-                //startActivity(i);
+                //MainActivity.Contacts.set(b.getInt("pos"), c);
+                startActivity(i);
             }
         });
     }

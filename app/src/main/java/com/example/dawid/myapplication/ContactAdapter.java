@@ -26,7 +26,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 {
     public static List<Contact> contactList;
     DatabaseHandler dbHandler;
-    CardView cardclicked;
     private Context mContext;
 
     public ContactAdapter(Context context, List<Contact> c)
@@ -86,7 +85,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                                 deleteView(getPosition());
                             else if (item.getItemId() == R.id.call) {
 
-                                if (!MainActivity.Contacts.get(getPosition()).getPhonenumber().equals(""))
+                                if (!contactList.get(getPosition()).getPhonenumber().equals(""))
                                     call(getPosition());
                                 else
                                     Toast.makeText(listItemView.getContext(), "Contact has no phone number.", Toast.LENGTH_SHORT).show();
@@ -115,7 +114,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
     public void call(int i) {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:" + MainActivity.Contacts.get(i).getPhonenumber()));
+        callIntent.setData(Uri.parse("tel:" + contactList.get(i).getPhonenumber()));
         mContext.startActivity(callIntent);
     }
 
@@ -123,10 +122,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     {
         Intent intent = new Intent(mContext, UpdateActivity.class);
 
-        intent.putExtra("name", MainActivity.Contacts.get(i).getName());
-        intent.putExtra("phone", MainActivity.Contacts.get(i).getPhonenumber());
-        intent.putExtra("email", MainActivity.Contacts.get(i).getEmail());
-        intent.putExtra("id", MainActivity.Contacts.get(i).getId());
+        intent.putExtra("name", contactList.get(i).getName());
+        intent.putExtra("phone", contactList.get(i).getPhonenumber());
+        intent.putExtra("email", contactList.get(i).getEmail());
+        intent.putExtra("id", contactList.get(i).getId());
         intent.putExtra("pos", i);
 
         mContext.startActivity(intent);
